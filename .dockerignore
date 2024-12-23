@@ -1,0 +1,7 @@
+docker-compose.yml
+errors
+data
+iframe_figures
+*/*.html
+*/*.json
+nohup.out

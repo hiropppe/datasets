@@ -17,9 +17,9 @@ toxicity_genres = ('333', '334', '335', '336', '337', '338', '339', '340', '341'
 def main(source, output):
     data = []
     sub2X = get_sub2X_map()
-    for path in tqdm(glob.glob(os.path.join(source, '*/*.html'))):
+    for path in tqdm(glob.glob(os.path.join(source, '**/*.html'), recursive=True)):
         blog, entry = path.split('/')[-1].split('#')
-        subgenre_id = path.split('/')[2]
+        subgenre_id = path.split('/')[-2]
         toxicity = 1 if subgenre_id in toxicity_genres else 0
         try:
             title, summary = readability(open(path).read())

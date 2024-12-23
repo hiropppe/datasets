@@ -169,3 +169,13 @@ cython_debug/
 
 **/*/*.html
 **/*/*.json
+
+/data/*
+!.gitkeep
+
+iframe_figures
+errors
+
+.Trash-0/
+nohup.out
+

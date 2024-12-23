@@ -3,8 +3,6 @@ services:
     build: .
     container_name: datasets
     image: hiropppe/datasets
-    #ports:
-    #  - 8888:8888
     network_mode: host
     tty: true
     volumes:

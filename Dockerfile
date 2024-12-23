@@ -8,6 +8,7 @@ RUN apt-get update \
  && apt-get install -y --no-install-recommends build-essential pkg-config locales tzdata \
     python3 python3-dev python3-pip python3-wheel python3-venv pipx \
     vim git curl jq \
+    nodejs npm \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -21,6 +22,10 @@ ENV PATH="${PATH}:/root/.local/bin"
 
 RUN ln -sf /usr/bin/python3.10 /usr/bin/python3
 RUN ln -s /usr/bin/python3 /usr/bin/python
+
+RUN npm install n -g
+RUN n stable
+RUN apt-get purge -y nodejs npm
 
 RUN pipx install poetry
 

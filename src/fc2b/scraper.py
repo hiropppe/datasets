@@ -49,7 +49,7 @@ def scraping_genre(url, genre_dest, dryrun=False):
                 try:
                     download_html(entry_url, genre_dest, dryrun=dryrun)
                     if not dryrun:
-                        time.sleep(random.randint(1, 3)) 
+                        time.sleep(random.random()) 
                 except KeyboardInterrupt:
                     raise
                 except:
@@ -97,7 +97,7 @@ def to_absolute_url(url):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='FC2 Blog Scraper.')
-    parser.add_argument('--dest', '-d', default='./fc2blog')
+    parser.add_argument('--dest', '-d', default='/data/fc2b/html')
     parser.add_argument('--dryrun', action='store_true')
     parser.add_argument('--genres')
 
