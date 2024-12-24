@@ -17,4 +17,7 @@ text-model = {git = "https://github.com/hiropppe/topic-model.git", rev = "master
 jupyterlab = "3.6.8"
 jupyterlab-pygments = "0.2.2"
 plotly = "^5.24.1"
+mecab-python3 = "^1.0.10"
+neologdn = "^0.5.3"
+japanize-matplotlib = "^1.1.3"
 
