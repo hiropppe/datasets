@@ -20,4 +20,5 @@ plotly = "^5.24.1"
 mecab-python3 = "^1.0.10"
 neologdn = "^0.5.3"
 japanize-matplotlib = "^1.1.3"
+trafilatura = "^2.0.0"
 

@@ -15,11 +15,13 @@ cookies = {'age_check': '1'}
 
 toxicity_genres = (333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 378, 379, 381)
 
+timeout = httpx.Timeout(10.0, connect=30.0)
+
 
 def main(dest, dryrun, genres):
     os.makedirs(dest, exist_ok=True)
 
-    genre_page = httpx.get('https://blog.fc2.com/genrelist/', headers=headers, cookies=cookies)
+    genre_page = http_get('https://blog.fc2.com/genrelist/')
     genre_anchor_nodes = html.fromstring(genre_page.text).xpath('//*[@class="subgenre_name_list"]/li/a')
     genre_list = [(''.join(node.itertext()).strip(), node.attrib['href']) for node in genre_anchor_nodes]
 
@@ -43,7 +45,7 @@ def scraping_genre(url, genre_dest, dryrun=False):
     while True:
         page = None
         try:
-            page = httpx.get(url, headers=headers, cookies=cookies)
+            page = http_get(url)
             entry_urls = list(set(re.findall(r'https?://.+fc2.com/blog-entry-.+\.html', page.text)))
             for entry_url in entry_urls:
                 try:
@@ -52,11 +54,10 @@ def scraping_genre(url, genre_dest, dryrun=False):
                         time.sleep(random.random()) 
                 except KeyboardInterrupt:
                     raise
-                except:
-                    print(url, file=sys.stderr)
-                    with open('./errors', 'w') as f:
-                        print(url, file=f)
-                    traceback.print_exc()
+                except Exception as exc:
+                    print(f"{type(exc).__name__}. {str(exc)} {entry_url}", file=sys.stderr)
+                    with open('./errors', 'a') as f:
+                        print(entry_url, file=f)
         finally:
             if page:
                 url = get_next_page(page.text)
@@ -65,6 +66,13 @@ def scraping_genre(url, genre_dest, dryrun=False):
                 else:
                     print('EOP', file=sys.stderr)
                     break
+
+
+def http_get(url):
+    with httpx.Client(timeout=timeout, follow_redirects=True) as client:
+        response = client.get(url, headers=headers, cookies=cookies)
+        response.raise_for_status()
+        return response
 
 
 def get_next_page(html_text):
@@ -76,14 +84,15 @@ def get_next_page(html_text):
 
 def download_html(url, genre_dest, dryrun=False):
     server, entry = url.split('/')[-2:]
-    #server = server.replace('.fc2.com', '')
-    #entry = entry.split('.')[0]
     save_file = f"{server}#{entry}"
     save_path = os.path.join(genre_dest, save_file)
     print(f'{url} -> {save_path}')
     if not dryrun:
         with open(save_path, 'w') as f:
-            print(httpx.get(url, headers=headers, cookies=cookies).text, file=f)
+            text = http_get(url).text
+            if len(text.encode()) <= 10240:
+                raise Exception(f"Too small content text ({len(text.encode())} bytes). '{text}'")
+            print(text, file=f)
 
 
 def to_absolute_url(url):
