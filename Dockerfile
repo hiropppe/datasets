@@ -10,6 +10,7 @@ RUN apt-get update \
     nodejs npm \
     file \
     vim git curl jq \
+    fontconfig fonts-ipafont \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
